@@ -71,7 +71,14 @@
   }
 
   /* ---- HERO / STATUS BAR ---- */
-  header.hero{position:relative; z-index:1; padding:72px 0 48px;}
+  header.hero{position:relative; z-index:1; padding:80px 0 56px; overflow:hidden;}
+  .hero-glow{
+    position:absolute; top:-180px; right:-160px; width:560px; height:560px; z-index:-1;
+    background:radial-gradient(circle, rgba(63,185,80,0.16) 0%, rgba(90,166,255,0.09) 45%, transparent 72%);
+    filter:blur(10px); pointer-events:none;
+  }
+  .hero-grid{display:grid; grid-template-columns:1.15fr 0.85fr; gap:48px; align-items:center;}
+  @media (max-width:860px){ .hero-grid{grid-template-columns:1fr;} }
   .status-bar{
     display:inline-flex; align-items:center; gap:10px;
     font-family:var(--mono); font-size:12px; color:var(--green);
@@ -93,19 +100,70 @@
     font-weight:700; letter-spacing:-0.02em; line-height:1.05;
     margin-bottom:14px;
   }
+  h1.name .accent{
+    background:linear-gradient(90deg, var(--green) 0%, var(--blue) 100%);
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+  }
   .role-line{
     font-family:var(--mono); font-size:clamp(0.95rem,2vw,1.15rem);
     color:var(--blue); margin-bottom:20px;
   }
   .role-line span.sep{color:var(--text-faint); margin:0 8px;}
   p.tagline{
-    max-width:620px; color:var(--text-dim); font-size:1rem; margin-bottom:32px;
+    max-width:600px; color:var(--text-dim); font-size:1rem; margin-bottom:24px;
+  }
+  .tag-pills{display:flex; flex-wrap:wrap; gap:8px; margin-bottom:28px;}
+  .tag-pills span{
+    font-family:var(--mono); font-size:11px; color:var(--text-dim); text-transform:uppercase; letter-spacing:0.03em;
+    border:1px solid var(--border); padding:5px 11px; border-radius:999px; background:var(--bg-raise);
   }
   .meta-row{
-    display:flex; flex-wrap:wrap; gap:10px; font-family:var(--mono); font-size:12px; color:var(--text-faint);
+    display:flex; flex-wrap:wrap; gap:10px; font-family:var(--mono); font-size:12px; color:var(--text-faint); margin-bottom:32px;
   }
   .meta-row .chip{
     border:1px solid var(--border); padding:4px 10px; border-radius:4px; background:var(--bg-raise);
+  }
+  .hero-ctas{display:flex; flex-wrap:wrap; align-items:center; gap:14px;}
+  .btn-secondary{
+    display:inline-flex; align-items:center; gap:9px; font-family:var(--mono); font-size:13px; font-weight:500;
+    color:var(--text); background:var(--panel); border:1px solid var(--border); padding:11px 19px; border-radius:6px;
+    transition:transform .15s, border-color .15s, background .15s;
+  }
+  .btn-secondary:hover{transform:translateY(-1px); border-color:var(--blue); background:var(--panel-hover);}
+  .btn-secondary svg{width:15px; height:15px; stroke:var(--blue);}
+  .btn-text{
+    font-family:var(--mono); font-size:13px; color:var(--text-dim); border-bottom:1px dotted var(--text-faint); padding-bottom:2px;
+    transition:color .15s;
+  }
+  .btn-text:hover{color:var(--blue);}
+
+  /* hero visual panel */
+  .hero-visual{
+    background:linear-gradient(180deg, var(--panel) 0%, var(--bg-raise) 100%);
+    border:1px solid var(--border); border-radius:14px; padding:36px 28px;
+    box-shadow:0 20px 60px -20px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.03);
+    position:relative;
+  }
+  .hero-visual::before{
+    content:''; position:absolute; inset:0; border-radius:14px; padding:1px;
+    background:linear-gradient(135deg, rgba(63,185,80,0.35), transparent 40%, rgba(90,166,255,0.25));
+    -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite:xor; mask-composite:exclude; pointer-events:none;
+  }
+  .hv-row{display:flex; justify-content:space-between; align-items:center; margin-bottom:18px;}
+  .hv-dots span{display:inline-block; width:8px; height:8px; border-radius:50%; background:var(--border); margin-left:5px;}
+  .hv-title{font-family:var(--mono); font-size:11px; color:var(--text-faint); text-transform:uppercase; letter-spacing:0.05em;}
+  .hv-stack{display:flex; flex-direction:column; gap:12px; margin:22px 0;}
+  .hv-item{
+    display:flex; justify-content:space-between; align-items:center; font-family:var(--mono); font-size:12px;
+    padding:10px 12px; background:var(--bg-raise); border:1px solid var(--border-soft); border-radius:6px; color:var(--text-dim);
+  }
+  .hv-item b{color:var(--text); font-weight:500;}
+  .hv-item .ok{color:var(--green);}
+  .hv-badge{
+    text-align:center; font-family:var(--mono); font-size:13px; font-weight:600; letter-spacing:0.04em;
+    color:var(--text); background:linear-gradient(90deg, var(--green-dim), var(--blue-dim));
+    border:1px solid var(--border); border-radius:8px; padding:14px; margin-top:6px;
   }
 
   /* ---- METRICS STRIP ---- */
@@ -113,6 +171,7 @@
   .metrics-grid{
     display:grid; grid-template-columns:repeat(4,1fr); gap:1px;
     background:var(--border); border:1px solid var(--border); border-radius:var(--radius); overflow:hidden;
+    box-shadow:0 20px 45px -25px rgba(0,0,0,0.6);
   }
   .metric-tile{background:var(--panel); padding:22px 20px;}
   .metric-tile .val{font-family:var(--mono); font-size:1.7rem; font-weight:600; color:var(--text);}
@@ -133,9 +192,10 @@
   @media (max-width:560px){ .skills-grid{grid-template-columns:1fr;} }
   .skill-panel{
     background:var(--panel); border:1px solid var(--border-soft); border-radius:var(--radius);
-    padding:18px 18px 16px; transition:border-color .2s, background .2s;
+    padding:18px 18px 16px; transition:border-color .2s, background .2s, transform .2s, box-shadow .2s;
+    box-shadow:0 8px 24px -16px rgba(0,0,0,0.5);
   }
-  .skill-panel:hover{border-color:var(--border); background:var(--panel-hover);}
+  .skill-panel:hover{border-color:var(--border); background:var(--panel-hover); transform:translateY(-2px); box-shadow:0 14px 30px -14px rgba(0,0,0,0.55);}
   .skill-panel .cat{
     font-family:var(--mono); font-size:11px; color:var(--amber); text-transform:uppercase; letter-spacing:0.04em; margin-bottom:12px;
     display:flex; align-items:center; gap:8px;
@@ -175,9 +235,10 @@
   @media (max-width:760px){ .projects-grid{grid-template-columns:1fr;} }
   .project-card{
     background:var(--panel); border:1px solid var(--border-soft); border-radius:var(--radius);
-    padding:22px; transition:transform .2s, border-color .2s;
+    padding:22px; transition:transform .2s, border-color .2s, box-shadow .2s;
+    box-shadow:0 8px 24px -16px rgba(0,0,0,0.5);
   }
-  .project-card:hover{transform:translateY(-2px); border-color:var(--border);}
+  .project-card:hover{transform:translateY(-3px); border-color:var(--border); box-shadow:0 16px 34px -14px rgba(0,0,0,0.6);}
   .project-card .p-head{display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:10px;}
   .project-card h3{font-size:1.05rem; font-weight:600;}
   .status-pill{
@@ -232,12 +293,12 @@
   .btn-primary:hover{transform:translateY(-1px); box-shadow:0 6px 20px rgba(63,185,80,0.25);}
   .btn-primary svg{width:15px; height:15px;}
 
-  .contact-cards{display:grid; grid-template-columns:1fr 1fr; gap:14px;}
-  @media (max-width:520px){ .contact-cards{grid-template-columns:1fr;} }
+  .contact-cards{display:grid; grid-template-columns:1fr; gap:14px;}
   .c-card{
     display:flex; align-items:flex-start; gap:13px;
     background:var(--panel); border:1px solid var(--border-soft); border-radius:var(--radius);
     padding:16px; transition:border-color .2s, background .2s, transform .2s;
+    min-width:0;
   }
   .c-card:hover{border-color:var(--border); background:var(--panel-hover); transform:translateY(-2px);}
   .c-card .icon{
@@ -245,9 +306,69 @@
     background:var(--bg-raise); border:1px solid var(--border);
   }
   .c-card .icon svg{width:16px; height:16px; stroke:var(--blue);}
+  .c-card > div{min-width:0; flex:1;}
   .c-card .c-label{font-family:var(--mono); font-size:10px; color:var(--text-faint); text-transform:uppercase; letter-spacing:0.04em; margin-bottom:3px;}
-  .c-card .c-value{font-size:0.88rem; color:var(--text); word-break:break-word;}
+  .c-card .c-value{
+    font-size:0.85rem; color:var(--text);
+    white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+  }
   .c-card .c-value:hover{color:var(--blue);}
+
+  /* ---- CONTACT v2: Let's Connect ---- */
+  .connect-grid{display:grid; grid-template-columns:1fr 1.2fr; gap:44px; align-items:start;}
+  @media (max-width:860px){ .connect-grid{grid-template-columns:1fr;} }
+  .connect-info h3{font-size:1.9rem; font-weight:700; letter-spacing:-0.01em; margin-bottom:14px;}
+  .connect-info h3 .accent{
+    background:linear-gradient(90deg, var(--green), var(--blue));
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+  }
+  .connect-info > p{color:var(--text-dim); font-size:0.96rem; max-width:420px; margin-bottom:30px;}
+  .connect-list{display:flex; flex-direction:column; gap:18px; margin-bottom:34px;}
+  .connect-item{display:flex; align-items:center; gap:14px;}
+  .connect-item .icon{
+    flex-shrink:0; width:42px; height:42px; border-radius:8px; display:flex; align-items:center; justify-content:center;
+    background:var(--panel); border:1px solid var(--border); box-shadow:0 6px 16px -8px rgba(0,0,0,0.5);
+  }
+  .connect-item .icon svg{width:18px; height:18px; stroke:var(--blue);}
+  .connect-item .c-label{font-family:var(--mono); font-size:11px; color:var(--text-faint); text-transform:uppercase; letter-spacing:0.03em; margin-bottom:3px;}
+  .connect-item .c-value{font-size:0.96rem; font-weight:600; color:var(--text);}
+  .connect-item a.c-value:hover{color:var(--blue);}
+  .follow-label{font-family:var(--mono); font-size:11px; color:var(--text-faint); text-transform:uppercase; letter-spacing:0.05em; margin-bottom:12px;}
+  .follow-row{display:flex; gap:10px;}
+  .follow-row a{
+    width:42px; height:42px; border-radius:8px; display:flex; align-items:center; justify-content:center;
+    background:var(--panel); border:1px solid var(--border); transition:border-color .2s, transform .2s;
+  }
+  .follow-row a svg{width:17px; height:17px; stroke:var(--text-dim); transition:stroke .2s;}
+  .follow-row a:hover{border-color:var(--blue); transform:translateY(-2px);}
+  .follow-row a:hover svg{stroke:var(--blue);}
+
+  .connect-form{
+    background:var(--panel); border:1px solid var(--border); border-radius:14px; padding:32px;
+    box-shadow:0 20px 50px -25px rgba(0,0,0,0.6);
+  }
+  .form-row{display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:18px;}
+  @media (max-width:520px){ .form-row{grid-template-columns:1fr;} }
+  .form-group{margin-bottom:18px;}
+  .form-group label{display:block; font-size:0.85rem; font-weight:600; color:var(--text); margin-bottom:8px;}
+  .form-group input, .form-group textarea{
+    width:100%; background:var(--bg-raise); border:1px solid var(--border); border-radius:6px;
+    padding:11px 13px; color:var(--text); font-family:var(--sans); font-size:0.9rem;
+    transition:border-color .2s, box-shadow .2s;
+  }
+  .form-group input::placeholder, .form-group textarea::placeholder{color:var(--text-faint);}
+  .form-group input:focus, .form-group textarea:focus{
+    outline:none; border-color:var(--blue); box-shadow:0 0 0 3px var(--blue-dim);
+  }
+  .form-group textarea{resize:vertical; min-height:120px; font-family:var(--sans);}
+  .btn-send{
+    width:100%; display:flex; align-items:center; justify-content:center; gap:10px;
+    background:linear-gradient(90deg, var(--green), var(--blue)); color:#0B0F14; font-weight:600; font-size:0.95rem;
+    padding:13px; border-radius:8px; border:none; cursor:pointer; transition:transform .15s, box-shadow .15s;
+  }
+  .btn-send:hover{transform:translateY(-1px); box-shadow:0 10px 26px -10px rgba(90,166,255,0.45);}
+  .btn-send svg{width:16px; height:16px;}
+  .form-note{font-family:var(--mono); font-size:11px; color:var(--text-faint); margin-top:12px; text-align:center;}
 
   footer{
     position:relative; z-index:1; padding:32px 0 48px; text-align:center;
@@ -283,15 +404,49 @@
 </nav>
 
 <header class="hero">
+  <div class="hero-glow"></div>
   <div class="wrap">
-    <div class="status-bar"><span class="pulse"></span> SYSTEM STATUS: OPERATIONAL &nbsp;·&nbsp; REGION: ap-south-1</div>
-    <h1 class="name">Ashok Swami</h1>
-    <div class="role-line">DevOps Engineer<span class="sep">/</span>Cloud Engineer<span class="sep">/</span>DevSecOps</div>
-    <p class="tagline">5+ years designing, automating, and managing scalable cloud infrastructure across AWS, Azure, and GCP — building secure, highly available, cloud-native platforms that improve deployment reliability and operational efficiency.</p>
-    <div class="meta-row">
-      <span class="chip">📍 Ahmedabad, India</span>
-      <span class="chip">🎓 M.Tech Cyber Security — Silver Oak University (2024–2026)</span>
-      <span class="chip">⬢ AWS · Azure · GCP</span>
+    <div class="hero-grid">
+      <div>
+        <div class="status-bar"><span class="pulse"></span> SYSTEM STATUS: OPERATIONAL &nbsp;·&nbsp; REGION: ap-south-1</div>
+        <h1 class="name">I'm <span class="accent">Ashok Swami</span></h1>
+        <div class="role-line">DevOps Engineer<span class="sep">/</span>Cloud Engineer<span class="sep">/</span>DevSecOps</div>
+        <div class="tag-pills">
+          <span>Remote</span><span>Onsite</span><span>Full-time</span><span>Contract</span>
+        </div>
+        <p class="tagline">5+ years designing, automating, and managing scalable cloud infrastructure across AWS, Azure, and GCP — building secure, highly available, cloud-native platforms that improve deployment reliability and operational efficiency.</p>
+        <div class="meta-row">
+          <span class="chip">📍 Ahmedabad, India</span>
+          <span class="chip">🎓 M.Tech Cyber Security — Silver Oak University (2024–2026)</span>
+          <span class="chip">⬢ AWS · Azure · GCP</span>
+        </div>
+        <div class="hero-ctas">
+          <a class="btn-primary" href="#projects">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+            View Projects
+          </a>
+          <a class="btn-secondary" href="#contact">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 6l-10 7L2 6"/><path d="M2 6h20v12H2z"/></svg>
+            Contact Me
+          </a>
+          <a class="btn-text" href="Ashok_Swami_Resume.pdf" download>
+            ↓ Download CV
+          </a>
+        </div>
+      </div>
+      <div class="hero-visual">
+        <div class="hv-row">
+          <span class="hv-title">infra_status.yaml</span>
+          <span class="hv-dots"><span></span><span></span><span></span></span>
+        </div>
+        <div class="hv-stack">
+          <div class="hv-item"><span>uptime</span><b class="ok">99.9%</b></div>
+          <div class="hv-item"><span>deploy_time</span><b>15 min</b></div>
+          <div class="hv-item"><span>apps_migrated</span><b>20+</b></div>
+          <div class="hv-item"><span>clouds</span><b>AWS · Azure · GCP</b></div>
+        </div>
+        <div class="hv-badge">☁ CLOUD &amp; DEVOPS EXPERT</div>
+      </div>
     </div>
   </div>
 </header>
@@ -526,7 +681,7 @@
         <div class="details">Dissertation: "Zero Trust Architecture for AWS Cloud Security" — a four-layer Zero Trust framework across Identity/Access, Network Security, Application Security, and Monitoring/Detection. Guide: Prof. Vishruti Mahida.</div>
       </div>
       <div class="edu-side">
-        <span class="status-pill done">completed 2026</span><br>
+        <span class="status-pill done">completed</span><br>
         2024 – 2026
       </div>
     </div>
@@ -588,34 +743,64 @@
 <section class="section" id="contact">
   <div class="wrap">
     <div class="section-head reveal"><span class="tag">06</span><h2>Contact</h2></div>
-    <div class="contact-layout">
-      <div class="contact-intro reveal">
+    <div class="connect-grid">
+      <div class="connect-info reveal">
         <div class="avail"><span class="pulse"></span> Open to opportunities</div>
-        <h3>Let's talk about your infrastructure.</h3>
-        <p>Reliable systems, secure pipelines, and cloud environments that scale — if you're hiring for DevSecOps, SRE, or Cloud Engineering, I'd like to hear from you.</p>
-        <a class="btn-primary" href="mailto:ashokswami1137@gmail.com">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16v16H4z" opacity="0"/><path d="M22 6l-10 7L2 6"/><path d="M2 6h20v12H2z"/></svg>
-          Say hello
-        </a>
+        <h3>Let's <span class="accent">Connect</span></h3>
+        <p>I'm open to new opportunities and collaborations. Whether you're hiring for DevOps, Cloud, or DevSecOps roles, or just want to say hi — I'll get back to you.</p>
+        <div class="connect-list">
+          <div class="connect-item">
+            <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 6l-10 7L2 6"/><path d="M2 6h20v12H2z"/></svg></span>
+            <div><div class="c-label">Email Me</div><a class="c-value" href="mailto:ashokswami1137@gmail.com">ashokswami1137@gmail.com</a></div>
+          </div>
+          <div class="connect-item">
+            <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.68 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.32 1.85.55 2.81.68A2 2 0 0 1 22 16.92z"/></svg></span>
+            <div><div class="c-label">Call Me</div><a class="c-value" href="tel:+919537875048">+91 95378 75048</a></div>
+          </div>
+          <div class="connect-item">
+            <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></span>
+            <div><div class="c-label">Location</div><div class="c-value">Ahmedabad, India (Remote Available)</div></div>
+          </div>
+        </div>
+        <div class="follow-label">Follow Me</div>
+        <div class="follow-row">
+          <a href="https://linkedin.com/in/ashok-swami" target="_blank" rel="noopener" aria-label="LinkedIn">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+          </a>
+          <a href="https://github.com/Ashok-Swami" target="_blank" rel="noopener" aria-label="GitHub">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+          </a>
+          <a href="mailto:ashokswami1137@gmail.com" aria-label="Email">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 6l-10 7L2 6"/><path d="M2 6h20v12H2z"/></svg>
+          </a>
+        </div>
       </div>
-      <div class="contact-cards reveal">
-        <a class="c-card" href="mailto:ashokswami1137@gmail.com">
-          <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 6l-10 7L2 6"/><path d="M2 6h20v12H2z"/></svg></span>
-          <div><div class="c-label">Email</div><div class="c-value">ashokswami1137@gmail.com</div></div>
-        </a>
-        <a class="c-card" href="tel:+919537875048">
-          <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.68 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.32 1.85.55 2.81.68A2 2 0 0 1 22 16.92z"/></svg></span>
-          <div><div class="c-label">Phone</div><div class="c-value">+91 95378 75048</div></div>
-        </a>
-        <a class="c-card" href="https://linkedin.com/in/ashok-swami" target="_blank" rel="noopener">
-          <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg></span>
-          <div><div class="c-label">LinkedIn</div><div class="c-value">ashok-swami</div></div>
-        </a>
-        <a class="c-card" href="https://github.com/Ashok-Swami" target="_blank" rel="noopener">
-          <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg></span>
-          <div><div class="c-label">GitHub</div><div class="c-value">Ashok-Swami</div></div>
-        </a>
-      </div>
+
+      <form class="connect-form reveal" id="contact-form">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="cf-name">Name</label>
+            <input type="text" id="cf-name" placeholder="John Doe" required>
+          </div>
+          <div class="form-group">
+            <label for="cf-email">Email</label>
+            <input type="email" id="cf-email" placeholder="john@example.com" required>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="cf-subject">Subject</label>
+          <input type="text" id="cf-subject" placeholder="Project Inquiry">
+        </div>
+        <div class="form-group">
+          <label for="cf-message">Message</label>
+          <textarea id="cf-message" placeholder="Tell me about your project..." required></textarea>
+        </div>
+        <button type="submit" class="btn-send">
+          Send Message
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2L11 13"/><path d="M22 2l-7 20-4-9-9-4 20-7z"/></svg>
+        </button>
+        <div class="form-note">Opens your email app with this message pre-filled</div>
+      </form>
     </div>
   </div>
 </section>
@@ -626,6 +811,19 @@
 
 <script>
   document.getElementById('year').textContent = new Date().getFullYear();
+
+  const contactForm = document.getElementById('contact-form');
+  if(contactForm){
+    contactForm.addEventListener('submit', function(e){
+      e.preventDefault();
+      const name = document.getElementById('cf-name').value.trim();
+      const email = document.getElementById('cf-email').value.trim();
+      const subject = document.getElementById('cf-subject').value.trim() || 'Project Inquiry';
+      const message = document.getElementById('cf-message').value.trim();
+      const body = `Name: ${name}\nEmail: ${email}\n\n${message}`;
+      window.location.href = `mailto:ashokswami1137@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    });
+  }
 
   const revealEls = document.querySelectorAll('.reveal');
   const io = new IntersectionObserver((entries) => {
