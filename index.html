@@ -39,6 +39,7 @@
   }
   a{color:inherit; text-decoration:none;}
   .wrap{max-width:1080px; margin:0 auto; padding:0 24px;}
+  @media (max-width:560px){ .wrap{padding:0 18px;} }
   ::selection{background:var(--green-dim); color:var(--text);}
 
   /* background grid texture */
@@ -59,19 +60,33 @@
     backdrop-filter:blur(10px);
     border-bottom:1px solid var(--border-soft);
   }
-  nav .wrap{display:flex; align-items:center; justify-content:space-between; height:56px;}
+  nav .wrap{display:flex; align-items:center; justify-content:space-between; height:56px; position:relative;}
   .brand{font-family:var(--mono); font-size:13px; font-weight:600; letter-spacing:0.02em; color:var(--text);}
   .brand .dot{color:var(--green);}
   .nav-links{display:flex; gap:28px; font-family:var(--mono); font-size:12px; color:var(--text-dim);}
   .nav-links a{transition:color .15s;}
   .nav-links a:hover{color:var(--text);}
-  .nav-toggle{display:none;}
+  .nav-toggle{
+    display:none; flex-direction:column; gap:4px; background:none; border:none; cursor:pointer; padding:8px; z-index:60;
+  }
+  .nav-toggle span{width:20px; height:2px; background:var(--text); transition:transform .25s, opacity .25s;}
+  .nav-toggle.open span:nth-child(1){transform:translateY(6px) rotate(45deg);}
+  .nav-toggle.open span:nth-child(2){opacity:0;}
+  .nav-toggle.open span:nth-child(3){transform:translateY(-6px) rotate(-45deg);}
   @media (max-width:720px){
-    .nav-links{display:none;}
+    .nav-links{
+      position:absolute; top:56px; left:0; right:0; flex-direction:column; gap:0;
+      background:var(--bg-raise); border-bottom:1px solid var(--border-soft);
+      max-height:0; overflow:hidden; transition:max-height .3s ease;
+    }
+    .nav-links.open{max-height:400px;}
+    .nav-links a{padding:14px 24px; border-bottom:1px solid var(--border-soft); font-size:13px;}
+    .nav-toggle{display:flex;}
   }
 
   /* ---- HERO / STATUS BAR ---- */
   header.hero{position:relative; z-index:1; padding:80px 0 56px; overflow:hidden;}
+  @media (max-width:560px){ header.hero{padding:36px 0 40px;} }
   .hero-glow{
     position:absolute; top:-180px; right:-160px; width:560px; height:560px; z-index:-1;
     background:radial-gradient(circle, rgba(63,185,80,0.16) 0%, rgba(90,166,255,0.09) 45%, transparent 72%);
@@ -144,6 +159,7 @@
     box-shadow:0 20px 60px -20px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.03);
     position:relative;
   }
+  @media (max-width:560px){ .hero-visual{padding:22px 18px;} }
   .hero-visual::before{
     content:''; position:absolute; inset:0; border-radius:14px; padding:1px;
     background:linear-gradient(135deg, rgba(63,185,80,0.35), transparent 40%, rgba(90,166,255,0.25));
@@ -178,9 +194,11 @@
   .metric-tile .val .unit{font-size:0.9rem; color:var(--green); margin-left:2px;}
   .metric-tile .label{font-size:11px; color:var(--text-faint); font-family:var(--mono); letter-spacing:0.03em; margin-top:6px; text-transform:uppercase;}
   @media (max-width:720px){ .metrics-grid{grid-template-columns:repeat(2,1fr);} }
+  @media (max-width:440px){ .metrics-grid{grid-template-columns:1fr;} }
 
   /* ---- SECTION HEADERS ---- */
   .section{position:relative; z-index:1; padding:64px 0;}
+  @media (max-width:560px){ .section{padding:44px 0;} }
   .section-head{display:flex; align-items:baseline; gap:12px; margin-bottom:36px;}
   .section-head .tag{font-family:var(--mono); font-size:12px; color:var(--text-faint);}
   .section-head h2{font-size:1.5rem; font-weight:600; letter-spacing:-0.01em;}
@@ -347,6 +365,7 @@
     background:var(--panel); border:1px solid var(--border); border-radius:14px; padding:32px;
     box-shadow:0 20px 50px -25px rgba(0,0,0,0.6);
   }
+  @media (max-width:560px){ .connect-form{padding:20px;} }
   .form-row{display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:18px;}
   @media (max-width:520px){ .form-row{grid-template-columns:1fr;} }
   .form-group{margin-bottom:18px;}
@@ -392,7 +411,7 @@
 <nav>
   <div class="wrap">
     <div class="brand"><span class="dot">●</span> ashok.swami</div>
-    <div class="nav-links">
+    <div class="nav-links" id="nav-links">
       <a href="#skills">skills</a>
       <a href="#experience">experience</a>
       <a href="#projects">projects</a>
@@ -400,6 +419,9 @@
       <a href="#certifications">certs</a>
       <a href="#contact">contact</a>
     </div>
+    <button class="nav-toggle" id="nav-toggle" aria-label="Toggle menu">
+      <span></span><span></span><span></span>
+    </button>
   </div>
 </nav>
 
@@ -679,7 +701,7 @@
         <h3>M.Tech in Cyber Security — Cloud Security Specialization</h3>
         <div class="school">Silver Oak University, Ahmedabad</div>
       </div>
-        <div class="edu-side">
+      <div class="edu-side">
         <span class="status-pill done">completed</span><br>
         2024 – 2026
       </div>
@@ -810,6 +832,21 @@
 
 <script>
   document.getElementById('year').textContent = new Date().getFullYear();
+
+  const navToggle = document.getElementById('nav-toggle');
+  const navLinks = document.getElementById('nav-links');
+  if(navToggle && navLinks){
+    navToggle.addEventListener('click', () => {
+      navToggle.classList.toggle('open');
+      navLinks.classList.toggle('open');
+    });
+    navLinks.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => {
+        navToggle.classList.remove('open');
+        navLinks.classList.remove('open');
+      });
+    });
+  }
 
   const contactForm = document.getElementById('contact-form');
   if(contactForm){
